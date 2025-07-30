@@ -72,6 +72,22 @@
         }
     </style>
     <script>
+function openPaymentModal() {
+    document.getElementById('paymentModal').classList.remove('hidden');
+}
+function closePaymentModal() {
+    document.getElementById('paymentModal').classList.add('hidden');
+}
+document.getElementById('paymentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    closePaymentModal();
+    showAlert("Payment successful! Your ticket is being processed.");
+});
+document.querySelectorAll('.popular-route').forEach(function(routeCard) {
+    routeCard.addEventListener('click', function() {
+        openPaymentModal();
+    });
+});
         tailwind.config = {
             theme: {
                 extend: {
@@ -294,7 +310,15 @@
                         </svg>
                         <span class="text-gray-700 dark:text-gray-300">Trip History</span>
                     </button>
-                    
+
+                    <button class="profile-menu-item w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" data-action="paymentMethods">
+                        <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 19a2 2 0 004 0"/>
+                        </svg>
+                        <span class="text-gray-700 dark:text-gray-300">Payment Methods</span>
+                    </button>
+
                     <button class="profile-menu-item w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" data-action="preferences">
                         <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
@@ -506,6 +530,11 @@
                         </button>
                     </div>
 
+<div id="paymentsScreen" class="px-4 max-w-7xl mx-auto hidden">
+  <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Payment Methods & History</h2>
+  <!-- Add your payment history/content here -->
+</div>
+
                     <!-- Trip Statistics -->
                     <div class="glassmorphism rounded-3xl p-6">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Trip Statistics</h3>
@@ -586,6 +615,13 @@
                     </svg>
                     <span class="text-xs">Profile</span>
                 </button>
+                <button class="nav-item flex flex-col items-center py-3 px-2" data-screen="paymentsScreen">
+                    <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 19a2 2 0 004 0"/>
+                   </svg>
+                   <span class="text-xs">Payments</span>
+               </button>
             </div>
         </nav>
     </div>
@@ -1199,5 +1235,39 @@
             showWelcomeScreen();
         });
     </script>
+<div id="paymentModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-md w-full p-8">
+    <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Secure Payment</h2>
+    <form id="paymentForm" class="space-y-4">
+      <div>
+        <label class="block text-sm mb-1">Card Number</label>
+        <input type="text" required maxlength="19" class="w-full px-3 py-2 border rounded-lg" placeholder="1234 5678 9012 3456">
+      </div>
+      <div class="flex space-x-2">
+        <div>
+          <label class="block text-sm mb-1">Expiry</label>
+          <input type="text" required maxlength="5" class="w-full px-3 py-2 border rounded-lg" placeholder="MM/YY">
+        </div>
+        <div>
+          <label class="block text-sm mb-1">CVV</label>
+          <input type="text" required maxlength="4" class="w-full px-3 py-2 border rounded-lg" placeholder="123">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Cardholder Name</label>
+        <input type="text" required class="w-full px-3 py-2 border rounded-lg" placeholder="Full Name">
+      </div>
+      <div class="flex space-x-2">
+        <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg">Pay Now</button>
+        <button type="button" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg" onclick="closePaymentModal()">Cancel</button>
+      </div>
+    </form>
+    <div class="flex space-x-3 mt-4">
+      <img src="https://img.icons8.com/color/48/000000/visa.png" class="h-8" alt="Visa"/>
+      <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="h-8" alt="Mastercard"/>
+      <img src="https://img.icons8.com/color/48/000000/verve-card.png" class="h-8" alt="Verve"/>
+    </div>
+  </div>
+</div>
 </body>
 </html>
